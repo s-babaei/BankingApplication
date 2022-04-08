@@ -2,9 +2,11 @@ package Entity;
 
 
 import lombok.*;
+import net.bytebuddy.dynamic.DynamicType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.*;
 
 @Getter
 @Setter
@@ -15,20 +17,24 @@ import java.math.BigDecimal;
 @Table(schema = "Bank")
 public class BankAccountEntity {
 
-
+   @OneToMany
+    private ArrayList<TransactionEntity> transactionEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+private int userid;
     @Column(name = "number")
     private String number;
 
+    @Column(name ="fullName")
+    private String fullName;
 
-
+    @Column(name = "cardNumber")
     private String cardNumber;
 
+    @Column(name = "amount")
     private Integer amount;
 
     @Column(name = "balance")
@@ -47,11 +53,13 @@ public class BankAccountEntity {
     @Column(name = "actualBalance")
     private BigDecimal actualBalance;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private UserEntity user;
+
 
     public BankAccountEntity() {
+
 
     }
 }

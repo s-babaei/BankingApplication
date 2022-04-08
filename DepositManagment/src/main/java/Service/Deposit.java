@@ -1,5 +1,6 @@
 package Service;
 
+import Entity.AccountStatus;
 import Entity.BankAccountEntity;
 import Entity.UserEntity;
 import Repository.BankAccountRepository;
@@ -28,9 +29,9 @@ public abstract class Deposit {
     private String title;
     private int balance;
     private String depositNumber;
-//    private Customer customer;
+    //    private Customer customer;
     private Date openDate;
-   // private float withdrawalAllowedPercent;
+    // private float withdrawalAllowedPercent;
     private WithdrawalMethod[] withdrawalMethod;
 
     public Deposit(int balance, String title) {
@@ -50,14 +51,11 @@ public abstract class Deposit {
 
 //    public abstract WithdrawalMethod[] getAllowedWithdrawalMethods();
 
-   // public void withdrawal(int balance, WithdrawalMethod withdrawalMethod){
-      //  validateWithdrawal(balance, withdrawalMethod);
-       // withdrawal(balance);
-   // }
+    // public void withdrawal(int balance, WithdrawalMethod withdrawalMethod){
+    //  validateWithdrawal(balance, withdrawalMethod);
+    // withdrawal(balance);
+    // }
     public Long withdraw(WithdrawalMethod withdrawalMethod, Integer amount) {
-
-
-
 
 
         BankAccountEntity bankAccountEntity = bankAccountRepository.find(withdrawalMethod);
@@ -75,14 +73,15 @@ public abstract class Deposit {
 
 
     }
+
     public Long deposit(WithdrawalMethod withdrawalMethod, Integer amount) {
 
-      // BankAccountEntity withdrawalMethod = bankAccountRepository.find(WithdrawalMethod.valueOf(bankAccountEntity.getCardNumber()));
+        // BankAccountEntity withdrawalMethod = bankAccountRepository.find(WithdrawalMethod.valueOf(bankAccountEntity.getCardNumber()));
         BankAccountEntity bankAccountEntity = bankAccountRepository.find(withdrawalMethod);
-       // Integer balance = card.getBalance();
+        // Integer balance = card.getBalance();
         Integer balance = bankAccountEntity.getBalance();
-        balance += amount ;
-       bankAccountEntity.setBalance(balance);
+        balance += amount;
+        bankAccountEntity.setBalance(balance);
         bankAccountRepository.save(bankAccountEntity);
         return Long.valueOf(balance);
 
@@ -91,20 +90,20 @@ public abstract class Deposit {
 
     public abstract WithdrawalMethod[] getAllowedWithdrawalMethods();
 
-//    protected void withdrawal(int balance) {
+    //    protected void withdrawal(int balance) {
 //        setBalance(getBalance() - balance);
 //        System.out.println("Withdrawal success");
 //    }
-public void save(BankAccountEntity item) {
+    public void save(BankAccountEntity item) {
 
 
+        checkBalanceAmount(item.getBalance());
 
-    checkBalanceAmount(item.getBalance());
+        bankAccountRepository.save(item);
 
-    bankAccountRepository.save(item);
-    listCreateBankAccount();
+        listCreateBankAccount();
 
-}
+    }
 
     private void checkBalanceAmount(Integer balance) {
         if (balance < 0) {
@@ -117,8 +116,8 @@ public void save(BankAccountEntity item) {
     public List<BankAccountEntity> listCreateBankAccount() {
         String sql = "Select new " + UserEntity.class.getName()
                 + "(e.id,e.fullName,e.balance) "
-                + " from " +BankAccountEntity.class.getName() + " e ";
-        Query query = (Query) entityManager.createQuery(sql,UserEntity.class);
+                + " from " + BankAccountEntity.class.getName() + " e ";
+        Query query = (Query) entityManager.createQuery(sql, UserEntity.class);
         return query.getResultList();
     }
 
@@ -127,8 +126,24 @@ public void save(BankAccountEntity item) {
         return bankAccountRepository.findById((long) id).get();
 
     }
-}
 
+    public Object getAllDeposit(int userid) {
+        return bankAccountRepository.getAllDeposit((long) userid);
+    }
+
+
+    public BankAccountEntity changeStatusDeposit(WithdrawalMethod withdrawalMethod) {
+
+        AccountStatus accountStatus = AccountStatus.ACTIVE;
+        if ((accountStatus == AccountStatus.CLOSE)) {
+            System.out.println("شما مجاز به انجام عملیات نیستین!");
+        } else {
+            System.out.println("شما مجاز به انجام عملیات هستین!");
+        }
+        return bankAccountRepository.changeStatusDeposit(withdrawalMethod);
+
+    }
+}
 //    protected void validateWithdrawal(int balance, WithdrawalMethod withdrawalMethod){
 //        if(balance < 0){
 //            throw new RuntimeException("Balance is negative");

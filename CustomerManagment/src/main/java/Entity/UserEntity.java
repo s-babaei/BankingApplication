@@ -26,16 +26,7 @@ public class UserEntity {
     private String lastName;
     @Column(name = "birthday")
     private Date birthday;
-
-    public Integer getNationalCode() {
-        return nationalCode;
-    }
-
-    public void setNationalCode(Integer nationalCode) {
-        this.nationalCode = nationalCode;
-    }
-
-    @Column(name = "nationalCode",unique = true)
+    @Column(name = "nationalCode", unique = true)
     private Integer nationalCode;
     @Column(name = "userCustomer")
     private Integer userCustomer;
@@ -47,12 +38,34 @@ public class UserEntity {
     private UserType userType;
     @Column(name = "createDate")
     private Date createDate;
-
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BankAccountEntity> accounts;
+    @Column(name = "customerId")
+    private String customerId;
 
     public UserEntity() {
+
+    }
+
+    public UserEntity(String customerId, String firstName, String nationalCode) {
+    }
+
+    public UserEntity(String identificationNumber) {
+    }
+
+
+//
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<BankAccountEntity> accounts;
+//
+
+
+
+    public Object getNationalCode(Integer nationalCode) {
+        return nationalCode;
+    }
+    public UserEntity(String customerId, String name) {
+
+        this.customerId = customerId;
+        this.firstName = name;
 
     }
 
@@ -60,13 +73,7 @@ public class UserEntity {
         return getUserid();
     }
 
-    public Object getNationalCode(Integer nationalCode) {
-        return nationalCode;
+    public String getName() {
+        return getName();
     }
 }
-//    @Column(name = "cardNumber")
-//    private Integer cardNumber;
-//    @Column(name = "amount")
-//    private double amount;
-//@Column(name = "email")
-//    private String email;

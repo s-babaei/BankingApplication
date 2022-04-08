@@ -7,25 +7,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 public class DepositController {
- /*   @Autowired
-DepositService depositService;
 
-    @PostMapping("/add")
-    @ResponseBody
-    public void add(@RequestBody BankAccountEntity item) {
-
-        depositService.save(item);
-    }*/
- @Autowired
- Deposit deposit;
+    @Autowired
+    Deposit deposit;
 
 
-    @GetMapping("/user/{userid}")
-    private BankAccountEntity getLatBalance(@PathVariable("userid") int userid) {
-        return deposit.getUsersById(userid);
+
+
+    @GetMapping("/bankAccount/{userid}")
+    private BankAccountEntity listCreateBankAccount(@PathVariable String userid) {
+        return (BankAccountEntity) deposit.listCreateBankAccount();
     }
 
 
+    @GetMapping("/deposit/{userid}")
+    private BankAccountEntity getAllDeposit(@PathVariable("userid") int id) {
+        return (BankAccountEntity) deposit.getAllDeposit(id);
+    }
+    @GetMapping("/findUserAccount/{userid}")
+    private BankAccountEntity findUserAccount(@PathVariable("userid") int id ) {
+        return (BankAccountEntity) deposit.getAllDeposit(id);
+    }
 
+    @GetMapping("/findUserAccount/{userid}")
+    private BankAccountEntity changeStatusDeposit(@PathVariable("userid") int id ) {
+        return (BankAccountEntity) deposit.getAllDeposit(id);
+    }
+    @PostMapping("/withdraw")
+    @ResponseBody
+    public Long withdraw(@RequestBody WithdrawDto withdraw) {
+        return deposit.withdraw(withdraw.getCardNumber(), withdraw.getAmount());
+    }
 
+    @PostMapping("/deposit")
+    @ResponseBody
+    public DepositDto deposit(@RequestBody DepositDto deposit) {
+        return deposit;
+    }
 }
