@@ -17,8 +17,8 @@ import java.util.*;
 @Table(schema = "Bank")
 public class BankAccountEntity {
 
-   @OneToMany
-    private ArrayList<TransactionEntity> transactionEntities;
+//   @OneToMany
+//    private ArrayList<TransactionEntity> transactionEntities;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,9 @@ public class BankAccountEntity {
 private int userid;
     @Column(name = "number")
     private String number;
+
+
+    private int accountNumber;
 
     @Column(name ="fullName")
     private String fullName;
@@ -38,7 +41,7 @@ private int userid;
     private Integer amount;
 
     @Column(name = "balance")
-    private Integer balance;
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")

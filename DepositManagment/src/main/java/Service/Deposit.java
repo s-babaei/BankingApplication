@@ -11,6 +11,8 @@ import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,10 @@ public abstract class Deposit {
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+
+    private UserService userService;
 
 
     private String title;
@@ -55,28 +61,52 @@ public abstract class Deposit {
     //  validateWithdrawal(balance, withdrawalMethod);
     // withdrawal(balance);
     // }
-    public Long withdraw(WithdrawalMethod withdrawalMethod, Integer amount) {
+    //public AccountStatus withdraw(WithdrawalMethod withdrawalMethod, Integer amount) {
+
+    public AccountStatus withdraw(String accountType, double amount, Principal principal) {
+      //  AccountStatus accountStatus = AccountStatus.ACTIVE;
+      //  if (accountStatus == AccountStatus.ACTIVE && accountStatus == AccountStatus.CLOSE) {
 
 
-        BankAccountEntity bankAccountEntity = bankAccountRepository.find(withdrawalMethod);
-        Integer balance = bankAccountEntity.getBalance();
-        if (balance < amount)
-            throw new RuntimeException("balnce should not be negetive");
-        if (balance.equals(amount)) {
-            throw new RuntimeException("balance should not be ziro");
-        }
+            UserEntity userEntity = userService.findByUsername(principal.getName());
+            BankAccountEntity bankAccountEntity=userEntity.getBankAccountEntity();
+        bankAccountEntity.setBalance(bankAccountEntity.getBalance().subtract(new BigDecimal(amount)));
 
-        balance -= amount;
-        bankAccountEntity.setBalance(balance);
-        bankAccountRepository.save(bankAccountEntity);
-        return Long.valueOf(balance);
+        bankAccountRepository.save(BankAccountEntity);
+
+        Date date = new Date();
+
+        TransanctionEntity transanctionEntity = new TransanctionEntity
+                (date, "Withdraw from Primary Account", "Account", "Finished", amount, primaryAccount.getAccountBalance(), primaryAccount);
 
 
+//        BankAccountEntity bankAccountEntity = bankAccountRepository.find(withdrawalMethod);
+//        Integer balance = bankAccountEntity.getBalance();
+//        if (balance < amount)
+//            throw new RuntimeException("balnce should not be negetive");
+//        if (balance.equals(amount)) {
+//            throw new RuntimeException("balance should not be ziro");
+//        }
+//
+//        balance -= amount;
+//        bankAccountEntity.setBalance(balance);
+//        bankAccountRepository.save(bankAccountEntity);
+//        return balance;
+//
+//        } else {
+//
+//            accountStatus = AccountStatus.CLOSE;
+//        }
+//
+//       return accountStatus;
     }
 
     public Long deposit(WithdrawalMethod withdrawalMethod, Integer amount) {
+        AccountStatus accountStatus = AccountStatus.ACTIVE;
+        if (accountStatus == AccountStatus.ACTIVE || accountStatus == AccountStatus.CLOSE) {
 
-        // BankAccountEntity withdrawalMethod = bankAccountRepository.find(WithdrawalMethod.valueOf(bankAccountEntity.getCardNumber()));
+
+            // BankAccountEntity withdrawalMethod = bankAccountRepository.find(WithdrawalMethod.valueOf(bankAccountEntity.getCardNumber()));
         BankAccountEntity bankAccountEntity = bankAccountRepository.find(withdrawalMethod);
         // Integer balance = card.getBalance();
         Integer balance = bankAccountEntity.getBalance();
@@ -85,8 +115,15 @@ public abstract class Deposit {
         bankAccountRepository.save(bankAccountEntity);
         return Long.valueOf(balance);
 
+        } else {
 
-    }
+            accountStatus = AccountStatus.CLOSE;
+        }
+
+        return 0;
+
+
+            }
 
     public abstract WithdrawalMethod[] getAllowedWithdrawalMethods();
 

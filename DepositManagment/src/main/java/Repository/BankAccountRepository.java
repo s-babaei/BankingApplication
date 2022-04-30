@@ -14,6 +14,7 @@ public interface BankAccountRepository extends JpaRepository<BankAccountEntity, 
 
 
 
+    BankAccountEntity findByAccountNumber(int accountNumber);
 
     UserEntity findUserAccount(WithdrawalMethod withdrawalMethod, int id);
 
@@ -26,4 +27,8 @@ public interface BankAccountRepository extends JpaRepository<BankAccountEntity, 
     Optional<BankAccountEntity> listCreateBankAccount();
 
     List<Object> findById(WithdrawalMethod withdrawalMethod);
+
+    String findUserAccount(String active, String s);
+
+    Optional<List<BankAccountEntity>> findUserAccount(String active);
 }

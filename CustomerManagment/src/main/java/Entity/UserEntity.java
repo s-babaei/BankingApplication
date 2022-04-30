@@ -41,6 +41,12 @@ public class UserEntity {
     @Column(name = "customerId")
     private String customerId;
 
+
+
+
+    @OneToOne
+    private BankAccountEntity bankAccountEntity;
+
     public UserEntity() {
 
     }

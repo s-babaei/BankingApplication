@@ -19,7 +19,9 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "bank_account_entity_id")
-    BankAccountEntity bankAccountEntity;
+    private BankAccountEntity bankAccountEntity;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
